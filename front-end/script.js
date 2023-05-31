@@ -107,10 +107,8 @@ async function updateProduct(id) {
   });
 
   if (response.ok) {
-    fetchProducts();
-    nameInput.value = '';
-    descriptionInput.value = '';
-    priceInput.value = '';
+    fetchProducts()
+    showCreateForm()
   }
 }
 
