@@ -39,7 +39,7 @@ app.get('/products/:id', async (req, res) => {
     .from('products')
     .select('*')
     .eq('id', id)
-    .single();
+    .single()
   if (error) return res.status(500).json({ error: error.message });
   if (!data) return res.status(404).json({ error: 'Product not found' });
   res.json(data);
@@ -47,31 +47,36 @@ app.get('/products/:id', async (req, res) => {
 
 app.post('/products', async (req, res) => {
   const product = req.body;
-  const { data, error } = await supabase.from('products').insert([product]);
+  const { status, statusText, data, error } = await supabase
+    .from('products')
+    .insert([product])
   if (error) return res.status(500).json({ error: error.message });
+  if (!data && statusText) return res.status(status).json({ message: statusText });
   res.status(201).json(data[0]);
 });
 
 app.put('/products/:id', async (req, res) => {
   const { id } = req.params;
   const product = req.body;
-  const { data, error } = await supabase
+  const { status, statusText, data, error } = await supabase
     .from('products')
     .update(product)
-    .eq('id', id);
+    .eq('id', id)
   if (error) return res.status(500).json({ error: error.message });
-  if (data.length === 0) return res.status(404).json({ error: 'Product not found' });
+  if (!data && statusText) return res.status(status).json({ message: statusText });
+  if (!data) return res.status(404).json({ error: 'Product not found' });
   res.json(data[0]);
 });
 
 app.delete('/products/:id', async (req, res) => {
   const { id } = req.params;
-  const { data, error } = await supabase
+  const { status, statusText, data, error } = await supabase
     .from('products')
     .delete()
     .eq('id', id);
   if (error) return res.status(500).json({ error: error.message });
-  if (data.length === 0) return res.status(404).json({ error: 'Product not found' });
+  if (!data && statusText) return res.status(status).json({ message: statusText })
+  if (!data) return res.status(404).json({ error: 'Product not found' });
   res.json({ message: 'Product deleted successfully' });
 });
 
