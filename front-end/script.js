@@ -19,7 +19,7 @@ function renderProducts(products) {
     item.innerHTML = `
       <h3>${product.name}</h3>
       <p>${product.description}</p>
-      <p>Price: $${product.price}</p>
+      <p>Price: $${parseFloat(product.price).toFixed(2)}</p>
       <button class="edit-button" onclick="editProduct(${product.id})">Edit</button>
       <button class="delete-button" onclick="deleteProduct(${product.id})">Delete</button>
     `;
